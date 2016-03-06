@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class MainMenu extends JPanel{
-	CustomButton play;
-	CustomButton leaderBoard;
+	JButton play;
+	JButton leaderBoard;
 	JFrame window;
 	ImageIcon img;
 	public boolean started = false;
@@ -22,23 +22,23 @@ public class MainMenu extends JPanel{
 		this.window = window;
 		img = new ImageIcon("res/MainMenu.png");
 		
-		this.setLayout(null);
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		
-		//add(Box.createVerticalStrut(350));
-		//add(Box.createHorizontalStrut(10));
+		add(Box.createVerticalStrut(350));
+		add(Box.createHorizontalStrut(10));
 		//add(new Box.Filler(200,200,200));
 		
-		play = new CustomButton("Play",178,42);
-		play.setBounds(510,480,178,42);
+		play = new JButton("Play");
 		add(play);
 		
-		leaderBoard = new CustomButton("LeaderBoard",395,42);
-		leaderBoard.setBounds(510,576,395,42);
+		add(Box.createVerticalStrut(50));
+		leaderBoard = new JButton("LeaderBoard");
+		leaderBoard.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		add(leaderBoard);
-		//add(Box.createHorizontalGlue());
-		//add(Box.createVerticalGlue());
-
+		add(Box.createHorizontalGlue());
+		add(Box.createVerticalGlue());
+		
 		window.getContentPane().add(this);
 		
 

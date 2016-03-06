@@ -36,7 +36,7 @@ public class Game implements Runnable {
 	@SuppressWarnings("unused")
 	private LeaderBoard leaderBoard; //TO BE IMPLEMENTED AT A LATER TIME
 
-	public static boolean DebugEnvironment =true;
+	public static boolean DebugEnvironment =false;
 
 	private boolean isRunning= false;
 	private Thread thread;
@@ -156,15 +156,12 @@ public class Game implements Runnable {
 			return;
 		}
 		isRunning = false;
-		/*
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		*/
-		//System.exit(1);
-		//displayMainMenu();
+		System.exit(1);
 	}
 	
 	/*
@@ -204,7 +201,7 @@ public class Game implements Runnable {
 				}
 			}
 		}
-		displayMainMenu();
+		stop();
 	}
 	
 	/*
@@ -221,10 +218,6 @@ public class Game implements Runnable {
 	 */
 	private void tick() {
 		PlayMenu.update();
-		if(!PlayMenu.player.isAlive()){
-			stop();
-		
-		}
 	}
 	
 	/*
