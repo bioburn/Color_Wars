@@ -27,7 +27,7 @@ public class Map extends JPanel{
 	/*
 	 * Creates the one and only instance of Player
 	 */
-	public Player player = new Player(Game.WIDTH/2, Game.HEIGHT/2, Color.RED);
+	Player player = new Player(Game.WIDTH/2, Game.HEIGHT/2, Color.RED);
 	private double pX;
 	private double pY;
 	
@@ -36,10 +36,9 @@ public class Map extends JPanel{
 	 */
 	ArrayList<Wave> waveList = new ArrayList<Wave>();
 	Wave wave1 = new Wave(4);
-	Wave wave2 = new Wave(4);
-	Wave wave3 = new Wave(4);
+	Wave wave2 = new Wave(10);
 	
-	private int currentWave = 0;
+	int currentWave = 0;
 	/*
 	 * Creates the Projectiles objects.
 	 * proj represents the player's projectiles
@@ -61,16 +60,7 @@ public class Map extends JPanel{
 		this.window = window;
 		waveList.add(wave1);
 		waveList.add(wave2);
-		waveList.add(wave3);
-		
-		/*
-		 * HARD CODE WAVES HERE
-		 */
-		for(int i=0;i<wave1.numEnemies;i++) wave1.addCircle();
-		wave2.autoPopulate();
-		wave3.autoPopulate();
 	}
-	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -90,16 +80,13 @@ public class Map extends JPanel{
 	public void update(){
 		player.update();
 		if(!player.isAlive()){
-			//System.exit(1);
+			System.exit(1);
 		}
 		pX = player.getX();
 		pY = player.getY();		
 		
-		
 		player.playerShoot(Game.mouseX,Game.mouseY,proj);
-		circleShoot(waveList.get(currentWave));
-		
-		if(waveList.get(currentWave).numEnemies == 0) currentWave++;
+		circleShoot(wave1);
 		
 		waveList.get(currentWave).update(pX, pY);
 		proj.update(pX,pY);
@@ -107,12 +94,15 @@ public class Map extends JPanel{
 		hub.update(player.health,score);
 		
 		proj2.checkForCollisions(player);
-		waveList.get(currentWave).checkForCollisions(waveList.get(currentWave));
+		waveList.get(currentWave).checkForCollisions(wave1);
 		waveList.get(currentWave).checkForCollisions(player);
 		waveList.get(currentWave).checkForCollisions(proj);
 		
+		if(waveList.get(currentWave).size() == 0) currentWave++;
 	}
 
+	
+	
 	/*
 	 * Makes the circles shoot at the player in random intervals
 	 *
@@ -136,10 +126,6 @@ public class Map extends JPanel{
 			}
 		}
 	}
-	
-	/*
-	 * updates the score on the Hub
-	 */
 	public void updateScore(int points){
 		score+= points;
 	}
