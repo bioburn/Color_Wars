@@ -1,7 +1,9 @@
 package framework;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,22 +18,27 @@ public class LeaderBoard extends JPanel{
 	JButton mainMenu;
 	JFrame window;
 	HighScores highScores;
-	public LeaderBoard(JFrame window, HighScores highScores){
+	public LeaderBoard(JFrame window){
 		this.window=window;
 		mainMenu = new JButton("Main Menu");
 		this.add(mainMenu);
-		this.highScores=highScores;
+		try {
+			FileInputStream fileStream = new FileInputStream("res/HighScores.ser");
+			ObjectInputStream os = new ObjectInputStream(fileStream);
+			Object one = os.readObject();
+			highScores=(HighScores)one;
+			os.close();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			highScores= new HighScores();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		window.getContentPane().add(this);
 		}
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		for(int i=0;i<10;i++){
-			g.setColor(Color.black);
-			g.drawString("name " + highScores.getName(i), 0, 25*(i+1));
-			g.drawString("Score "+ highScores.getScore(i), 0, 25*(i+1)+10);
-		}
-		
-	}
 		
 }
