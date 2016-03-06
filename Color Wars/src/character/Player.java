@@ -1,5 +1,6 @@
 package character;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,11 +23,10 @@ public class Player extends GameObject{
 	/*
 	 * a variable that represents how many hits the player can take before it is destroyed
 	 */
-	public int health = 10; 
+	public int health = 100; 
 	public int delay = 0;
 	
-	private int size = 30;
-	private double sideLength = 2*size/Math.sqrt(3);
+	private int size = 40;
 	private boolean[] keys = new boolean[6];
 
 	private double vX = 0;
@@ -168,7 +168,7 @@ public class Player extends GameObject{
 	 * and calls its move() method
 	 */
 	public void update(){
-		if(this.health == 0){
+		if(this.health <= 0){
 			this.destroy();
 		}
 		this.delay++;
@@ -183,14 +183,19 @@ public class Player extends GameObject{
 		Graphics2D g2d = (Graphics2D)g;
 		 	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 		 			RenderingHints.VALUE_ANTIALIAS_ON);
-		 	Path2D.Double triangle = new Path2D.Double();
-		 	
-		 	triangle.moveTo(x,y);
-		 	triangle.lineTo(x+sideLength/4,y+size);
-		 	triangle.lineTo(x-sideLength/4, y+size);
-		 	g2d.setColor(this.color);
-		 	
-		 	
+		 	Path2D.Double player = new Path2D.Double();
+		 	 	
+		 	player.moveTo(x+size/6, y-size/2);  //1
+		 	player.lineTo(x+size/2.5, y+size/3);//2
+		 	player.lineTo(x+size/4, y+size/2);  //3
+		 	player.lineTo(x-size/4, y+size/2);  //4
+		 	player.lineTo(x-size/2.5, y+size/3);//5
+		 	player.lineTo(x-size/6, y-size/2);  //6
+		 	player.lineTo(x-size/8, y+size/4);  //7
+		 	player.lineTo(x+size/8, y+size/4);  //8
+		 	player.lineTo(x+size/6, y-size/2); //1
+		 	player.lineTo(x+size/2.5, y+size/3);//2
+			g2d.setColor(this.color);
 		 	
 		 	//Variables used for rotating
 		 	double xLength = x-Game.mouseX;
@@ -203,14 +208,17 @@ public class Player extends GameObject{
 		 	if(xLength <= 0)
 		 		theta = Math.PI - Math.asin(yLength/hyp);
 		 	
-		 	Shape t2 = ShapeTransforms.rotatedCopyOf(triangle, theta-Math.PI/2);
-		 	g2d.draw(t2);
-		 	g2d.fill(t2);
+		 	Shape p2 = ShapeTransforms.rotatedCopyOf(player, theta-Math.PI/2);
+		 	g2d.setColor(Color.black);
+		 	g2d.fill(p2);
+		 	g2d.setColor(this.color);
+		 	g2d.setStroke(new BasicStroke(2));
+		 	g2d.draw(p2);
 	}
 	
 	@Override
 	public Rectangle getBounds(){
-		Rectangle r =  new Rectangle((int)this.getX(),(int)this.getY(),this.size,this.size*2);
+		Rectangle r =  new Rectangle((int)this.getX()-size/2,(int)this.getY()-size/2,this.size,this.size);
 		return r;
 	}
 	
@@ -245,22 +253,7 @@ public class Player extends GameObject{
 	public void playerShoot(double x, double y, Projectiles p){
 		if(this.getDelay()==20){
 			
-			//Variables used for rotating
-		 	double xLength = this.x-Game.mouseX;
-		 	double yLength = this.y-Game.mouseY;
-		 	double hyp = Math.sqrt(Math.pow(xLength, 2)+Math.pow(yLength,2));
-		 	double theta = 0;
-		 	
-		 	//variables used to rotate
-		 	if(xLength > 0)
-		 		theta = Math.asin(yLength/hyp);
-		 	if(xLength <= 0)
-		 		theta = Math.PI - Math.asin(yLength/hyp);
-			
-		 	double xStart = 8*Math.cos(theta);
-		 	double yStart = 8*Math.sin(theta);
-		 	
-			p.add(new Projectile(this.x-xStart-5,this.y-yStart+9,x,y, this.color));
+			p.add(new Projectile(this.x-5,this.y-5,x,y, this.color));
 			this.setDelay(0);
 			
 			if(Game.DebugEnvironment==true)
